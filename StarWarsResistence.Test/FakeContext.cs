@@ -9,6 +9,7 @@ using AutoMapper;
 using StarWarsResistence.DTO;
 using Moq;
 using StarWarsResistence.Services;
+using StarWarsResistence.Interfaces;
 using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -31,7 +32,7 @@ namespace StarWarsResistence.Test
         public FakeContext(string testName)
         {
             FakeOptions = new DbContextOptionsBuilder<CentralErroContexto>()
-                .UseInMemoryDatabase(databaseName: $"CentralErrors_{testName}")
+                .UseInMemoryDatabase(databaseName: $"StarWars_{testName}")
                 .Options;
             DataFileNames.Add(typeof(Rebelde), $"FakeData{Path.DirectorySeparatorChar}Rebelde.json");
             DataFileNames.Add(typeof(RebeldeDTO), $"FakeData{Path.DirectorySeparatorChar}Rebelde.json");

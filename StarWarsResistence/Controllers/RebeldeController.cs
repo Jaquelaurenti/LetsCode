@@ -2,6 +2,7 @@
 using StarWarsResistence.DTO;
 using StarWarsResistence.Models;
 using StarWarsResistence.Services;
+using StarWarsResistence.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,35 @@ namespace StarWarsResistence.Controllers
             _RebeldeService = RebeldeService;
             _mapper = mapper;
             _context = context;
+        }
+
+        /// <summary>
+        /// Adiciona Rebeldes
+        /// </summary>
+        /// <returns>Rebeldes cadastrados</returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<IEnumerable<Rebelde>> Post([FromBody] RebeldeDTO value)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var request = new Rebelde();
+
+            var response = _RebeldeService.SaveOrUpdate(request);
+            if (response != null)
+            {
+                return Ok("Rebelde cadastrado com sucesso!");
+            }
+            else
+            {
+                object res = null;
+                NotFoundObjectResult notfound = new NotFoundObjectResult(res);
+                notfound.StatusCode = 400;
+                notfound.Value = "Erro ao registrar Rebelde!";
+                return NotFound(notfound);
+            }
         }
 
         /// <summary>

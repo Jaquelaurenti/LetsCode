@@ -3,6 +3,7 @@ using AutoMapper;
 using StarWarsResistence.ConfigStartup;
 using StarWarsResistence.Models;
 using StarWarsResistence.Services;
+using StarWarsResistence.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

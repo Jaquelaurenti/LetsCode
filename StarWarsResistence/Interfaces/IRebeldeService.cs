@@ -1,7 +1,7 @@
 ﻿using StarWarsResistence.Models;
 using System.Collections.Generic;
 
-namespace StarWarsResistence.Services
+namespace StarWarsResistence.Interfaces
 {
     public interface IRebeldeService
     {

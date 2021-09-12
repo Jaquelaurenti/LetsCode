@@ -1,4 +1,5 @@
-﻿using StarWarsResistence.Models;
+﻿using StarWarsResistence.Interfaces;
+using StarWarsResistence.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,7 +31,7 @@ namespace StarWarsResistence.Services
         public Rebelde SaveOrUpdate(Rebelde Rebelde)
         {
             var existe = _context.Rebeldes
-                    .Where(x => x.IdRebelde == Rebelde.IdRebelde)
+                    .Where(x => x.Id == Rebelde.Id)
                     .FirstOrDefault();
 
             if (existe == null)

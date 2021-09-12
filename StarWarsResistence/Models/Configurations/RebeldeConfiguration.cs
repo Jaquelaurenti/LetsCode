@@ -7,7 +7,13 @@ namespace StarWarsResistence.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Rebelde> builder)
         {
-            builder.HasKey(x => x.IdRebelde);
+            builder.HasKey(x => x.Id);
+
+            /*builder.HasOne(x => x.Localizacao)
+                  .WithMany(y => y.Id)
+                  .HasForeignKey(x => x.IdLocalizacao)
+                  .HasConstraintName("FK_Rebelde_Localizacao_Id");*/
+
         }
     }
 }
