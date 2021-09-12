@@ -11,12 +11,12 @@ namespace StarWarsResistence.Test.Models
 {
     public abstract class ModelBaseTest
     {
-        private CentralErroContexto _contexto;
+        private StarWarsContexto _contexto;
 
         protected string Model { get; set; }
         protected string Table { get; set; }
 
-        public ModelBaseTest(CentralErroContexto contexto)
+        public ModelBaseTest(StarWarsContexto contexto)
         {
             _contexto = contexto;
         }

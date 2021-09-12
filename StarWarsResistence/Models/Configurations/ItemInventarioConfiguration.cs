@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace StarWarsResistence.Models.Configurations
 {
-    public class InventarioConfiguration : IEntityTypeConfiguration<Inventario>
+    public class RebeldeConfiguration : IEntityTypeConfiguration<Rebelde>
     {
-        public void Configure(EntityTypeBuilder<Inventario> builder)
+        public void Configure(EntityTypeBuilder<Rebelde> builder)
         {
             builder.HasKey(x => x.Id);
 

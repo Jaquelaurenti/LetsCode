@@ -12,7 +12,7 @@ namespace StarWarsResistence.Test.Services
 {
     public class RebeldeServiceTest
     {
-        private CentralErroContexto _contexto;
+        private StarWarsContexto _contexto;
         private FakeContext _fakeContext;
 
         private RebeldeService _RebeldeService;
@@ -22,7 +22,7 @@ namespace StarWarsResistence.Test.Services
             _fakeContext = new FakeContext("RebeldeTestes");
             _fakeContext.FillWithAll();
 
-            _contexto = new CentralErroContexto(_fakeContext.FakeOptions);
+            _contexto = new StarWarsContexto(_fakeContext.FakeOptions);
             _RebeldeService = new RebeldeService(_contexto);
         }
 
@@ -36,7 +36,7 @@ namespace StarWarsResistence.Test.Services
             var service = new RebeldeService(_contexto);
             current = service.SaveOrUpdate(fakeRebelde);
 
-            Assert.NotEqual(0, fakeRebelde.IdRebelde);
+            Assert.NotEqual(0, fakeRebelde.Id);
         }
         
         [Theory]
@@ -45,10 +45,10 @@ namespace StarWarsResistence.Test.Services
         [InlineData(3)]
         public void Should_Return_Right_Rebelde_When_Find_By_Id(int id)
         {
-            var Rebelde = _fakeContext.GetFakeData<Rebelde>().Find(x => x.IdRebelde == id);
+            var Rebelde = _fakeContext.GetFakeData<Rebelde>().Find(x => x.Id== id);
 
             var service = new RebeldeService(_contexto);
-            var atual = service.FindByIdRebelde(Rebelde.IdRebelde);
+            var atual = service.FindByIdRebelde(Rebelde.Id);
 
             Assert.Equal(Rebelde, atual, new RebeldeIdComparer());
         }

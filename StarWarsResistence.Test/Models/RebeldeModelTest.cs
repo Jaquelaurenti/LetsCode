@@ -8,7 +8,7 @@ namespace StarWarsResistence.Test.Models
 {
     public class RebeldeModelTest : ModelBaseTest
     {
-        public RebeldeModelTest() : base(new CentralErroContexto())
+        public RebeldeModelTest() : base(new StarWarsContexto())
         {
             base.Table = "Rebelde";
             base.Model = "StarWarsResistence.Models.Rebelde";

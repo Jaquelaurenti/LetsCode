@@ -15,9 +15,9 @@ namespace StarWarsResistence.Services
         }
 
 
-        public Localizacao FindByIdRebelde(int RebeldeId)
+        public Localizacao FindByIdRebelde(int rebeldeId)
         {
-            return _context.Localizacao.Find(RebeldeId);
+            return _context.Localizacao.Find(rebeldeId);
         }
         public Localizacao FindByNome(string name)
         {

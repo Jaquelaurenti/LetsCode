@@ -27,7 +27,13 @@ namespace StarWarsResistence.Models
 
         [Column("Genero")]
         [Required]
-        public int IdGenero { get; set; }
+        public Genero IdGenero { get; set; }
+
+        [Column("Traidor")]
+        public bool Traidor { get; set; }
+
+        [Column("Reports")]
+        public int Reports { get; set; }
 
         [Column("IdLocalizacao")]
         public int IdLocalizacao { get; set; }
@@ -35,5 +41,18 @@ namespace StarWarsResistence.Models
         [Column("IdLocalizacao")]
         public Localizacao Localizacao { get; set; }
 
+        [Column("IdInventario")]
+        public Inventario Inventario { get; set; }
+
+        [Column("IdInventario")]
+        public int IdInventario { get; set; }
+
+    }
+
+    public enum Genero
+    {
+        Feminino = 0,
+        Masculino = 1,
+        Outro = 2,
     }
 }

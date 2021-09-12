@@ -16,16 +16,11 @@ namespace StarWarsResistence.DTO
         public int Idade { get; set; }
 
         [Required]
-        public Genero Genero { get; set; }
+        public int Genero { get; set; }
 
         public LocalizacaoDTO Localizacao { get; set; }
 
-    }
+        public InventarioDTO Inventario { get; set; }
 
-    public enum Genero
-    {
-        Feminino = 0,
-        Masculino = 1,
-        Outro = 2,
     }
 }

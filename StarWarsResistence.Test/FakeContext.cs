@@ -18,7 +18,7 @@ namespace StarWarsResistence.Test
 {
     public class FakeContext
     {
-        public DbContextOptions<CentralErroContexto> FakeOptions { get; }
+        public DbContextOptions<StarWarsContexto> FakeOptions { get; }
         public readonly IMapper Mapper;
 
         private Dictionary<Type, string> DataFileNames { get; } =
@@ -31,25 +31,51 @@ namespace StarWarsResistence.Test
 
         public FakeContext(string testName)
         {
-            FakeOptions = new DbContextOptionsBuilder<CentralErroContexto>()
+            FakeOptions = new DbContextOptionsBuilder<StarWarsContexto>()
                 .UseInMemoryDatabase(databaseName: $"StarWars_{testName}")
                 .Options;
             DataFileNames.Add(typeof(Rebelde), $"FakeData{Path.DirectorySeparatorChar}Rebelde.json");
             DataFileNames.Add(typeof(RebeldeDTO), $"FakeData{Path.DirectorySeparatorChar}Rebelde.json");
-           
+            DataFileNames.Add(typeof(Localizacao), $"FakeData{Path.DirectorySeparatorChar}localizacao.json");
+            DataFileNames.Add(typeof(LocalizacaoDTO), $"FakeData{Path.DirectorySeparatorChar}localizacao.json");
+
             var configuration = new MapperConfiguration(cfg =>
             {
              
                 cfg.CreateMap<Rebelde, RebeldeDTO>().ReverseMap();
+                cfg.CreateMap<Localizacao, LocalizacaoDTO>().ReverseMap();
 
             });
 
             this.Mapper = configuration.CreateMapper();
         }
 
+        public Mock<ILocalizacaoService> FakeLocalizacaoService()
+        {
+            var service = new Mock<ILocalizacaoService>();
+
+            service.Setup(x => x.FindByIdRebelde(It.IsAny<int>()))
+                .Returns((int id) => GetFakeData<Localizacao>()
+                .FirstOrDefault(x => x.Id == id));
+
+            service.Setup(x => x.FindByIdRebelde(1))
+                .Returns(() => GetFakeData<Localizacao>().FirstOrDefault());
+
+            service.Setup(x => x.SaveOrUpdate(It.IsAny<Localizacao>()))
+                .Returns((Localizacao localizacao) =>
+                {
+                    if (localizacao.Id == 0)
+                        localizacao.Id = 999;
+                    return localizacao;
+                });
+
+            return service;
+        }
+
         public void FillWithAll()
         {
             FillWith<Rebelde>();
+            FillWith<Localizacao>();
         }
         public List<T> GetFakeData<T>()
         {
@@ -59,7 +85,7 @@ namespace StarWarsResistence.Test
 
         public void FillWith<T>() where T : class
         {
-            using (var context = new CentralErroContexto(this.FakeOptions))
+            using (var context = new StarWarsContexto(this.FakeOptions))
             {
                 if (context.Set<T>().Count() == 0)
                 {
@@ -76,7 +102,7 @@ namespace StarWarsResistence.Test
 
             service.Setup(x => x.FindByIdRebelde(It.IsAny<int>()))
                 .Returns((int id) => GetFakeData<Rebelde>()
-                .FirstOrDefault(x => x.IdRebelde == id));
+                .FirstOrDefault(x => x.Id == id));
 
             service.Setup(x => x.FindAllRebeldes())
                 .Returns(() => GetFakeData<Rebelde>().ToList());
@@ -84,8 +110,8 @@ namespace StarWarsResistence.Test
             service.Setup(x => x.SaveOrUpdate(It.IsAny<Rebelde>()))
                 .Returns((Rebelde Rebelde) =>
                 {
-                    if (Rebelde.IdRebelde == 0)
-                        Rebelde.IdRebelde = 999;
+                    if (Rebelde.Id == 0)
+                        Rebelde.Id = 999;
                     return Rebelde;
                 });
 

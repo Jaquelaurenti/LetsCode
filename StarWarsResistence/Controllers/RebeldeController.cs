@@ -61,9 +61,11 @@ namespace StarWarsResistence.Controllers
             {
                 Idade = value.Idade,
                 Nome = value.Nome,
-                IdGenero = (int)value.Genero,
+                IdGenero = (Genero)value.Genero,
                 Localizacao = saveLocalizacao,
                 IdLocalizacao = saveLocalizacao.Id,
+                Reports = 0,
+                Traidor = false,
             };
             var response = _rebeldeService.SaveOrUpdate(request);
 

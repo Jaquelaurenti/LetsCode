@@ -18,14 +18,15 @@ namespace StarWarsResistence.Test.Controllers
         {
             var fakes = new FakeContext("RebeldeControllerTest");
             
-            var fakeRebeldeService = fakes.FakeRebeldeService().Object; 
-            
+            var fakeRebeldeService = fakes.FakeRebeldeService().Object;
+            var fakeLocalizacaoService = fakes.FakeLocalizacaoService().Object;
+
             var expected = fakes.Mapper.Map<List<Rebelde>>(fakeRebeldeService.FindAllRebeldes());
             
-            var contexto = new CentralErroContexto(fakes.FakeOptions);
+            var contexto = new StarWarsContexto(fakes.FakeOptions);
 
-            var controller = new RebeldeController(fakeRebeldeService, 
-                fakes.Mapper, contexto);
+            var controller = new RebeldeController(fakeRebeldeService,  
+                fakes.Mapper, fakeLocalizacaoService, contexto);
 
             var result = controller.Get();
 
@@ -45,13 +46,14 @@ namespace StarWarsResistence.Test.Controllers
             var fakes = new FakeContext("RebeldeTest");
 
             var fakeRebeldeService = fakes.FakeRebeldeService().Object;
+            var fakeLocalizacaoService = fakes.FakeLocalizacaoService().Object;
 
             var expected = fakes.Mapper.Map<Rebelde>(fakeRebeldeService.FindByIdRebelde(id));
 
-            var contexto = new CentralErroContexto(fakes.FakeOptions);
+            var contexto = new StarWarsContexto(fakes.FakeOptions);
 
             var controller = new RebeldeController(fakeRebeldeService,
-                fakes.Mapper, contexto);
+                 fakes.Mapper, fakeLocalizacaoService, contexto);
 
             var result = controller.Delete(id);
 

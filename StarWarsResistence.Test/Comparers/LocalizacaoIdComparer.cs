@@ -6,14 +6,14 @@ using StarWarsResistence.Models;
 
 namespace StarWarsResistence.Test.Comparers
 {
-    public class RebeldeIdComparer : IEqualityComparer<Rebelde>
+    public class LocalizacaoIdComparer : IEqualityComparer<Localizacao>
     {
-        public bool Equals(Rebelde x, Rebelde y)
+        public bool Equals(Localizacao x, Localizacao y)
         {
             return x.Id == y.Id;
         }
 
-        public int GetHashCode(Rebelde obj)
+        public int GetHashCode(Localizacao obj)
         {
             return obj.Id.GetHashCode();
         }
