@@ -1,0 +1,14 @@
+﻿[
+    {
+        "IdRebelde": 1,
+        "Nome": "error"
+    },
+    {
+        "IdRebelde": 2,
+        "Nome": "warn"
+    },
+    {
+        "IdRebelde": 3,
+        "Nome": "debug"
+    }
+]
