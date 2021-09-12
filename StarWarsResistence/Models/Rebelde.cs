@@ -21,7 +21,6 @@ namespace StarWarsResistence.Models
         [Required]
         public string Nome { get; set; }
 
-
         [Column("Idade")]
         [Required]
         public int Idade { get; set; }
@@ -30,11 +29,11 @@ namespace StarWarsResistence.Models
         [Required]
         public int IdGenero { get; set; }
 
-        [Column("IdLocalizacao"), Required]
+        [Column("IdLocalizacao")]
         public int IdLocalizacao { get; set; }
 
-        [ForeignKey("IdLocalizacao"), Required]
-        public virtual Localizacao Localizacao { get; set; }
+        [Column("IdLocalizacao")]
+        public Localizacao Localizacao { get; set; }
 
     }
 }

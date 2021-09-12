@@ -32,5 +32,6 @@ namespace StarWarsResistence.Models
         [StringLength(250)]
         [Required]
         public string Longitude { get; set; }
+
     }
 }

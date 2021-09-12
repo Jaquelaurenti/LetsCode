@@ -20,7 +20,6 @@ namespace StarWarsResistence.DTO
 
         public LocalizacaoDTO Localizacao { get; set; }
 
-
     }
 
     public enum Genero

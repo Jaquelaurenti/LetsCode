@@ -9,11 +9,6 @@ namespace StarWarsResistence.Models.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            /*builder.HasOne(x => x.Localizacao)
-                  .WithMany(y => y.Id)
-                  .HasForeignKey(x => x.IdLocalizacao)
-                  .HasConstraintName("FK_Rebelde_Localizacao_Id");*/
-
         }
     }
 }

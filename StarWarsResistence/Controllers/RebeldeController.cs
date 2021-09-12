@@ -19,13 +19,16 @@ namespace StarWarsResistence.Controllers
     //[Authorize]
     public class RebeldeController : ControllerBase
     {
-        private readonly IRebeldeService _RebeldeService;
+        private readonly IRebeldeService _rebeldeService;
+        private readonly ILocalizacaoService _localizacaoService;
         private readonly IMapper _mapper;
-        private readonly CentralErroContexto _context;
+        private readonly StarWarsContexto _context;
 
-        public RebeldeController(IRebeldeService RebeldeService, IMapper mapper, CentralErroContexto context)
+        public RebeldeController(IRebeldeService rebeldeService, IMapper mapper, ILocalizacaoService localizacaoService,
+            StarWarsContexto context)
         {
-            _RebeldeService = RebeldeService;
+            _rebeldeService = rebeldeService;
+            _localizacaoService = localizacaoService;
             _mapper = mapper;
             _context = context;
         }
@@ -42,12 +45,30 @@ namespace StarWarsResistence.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var request = new Rebelde();
+            var localizacao = new Localizacao
+            {
+                Galaxia = value.Localizacao.Galaxia,
+                Nome = value.Localizacao.Nome,
+                Latitude = value.Localizacao.Latitude,
+                Longitude = value.Localizacao.Longitude,
+     
+            };
 
-            var response = _RebeldeService.SaveOrUpdate(request);
+            var saveLocalizacao = _localizacaoService.SaveOrUpdate(localizacao);
+
+
+            var request = new Rebelde
+            {
+                Idade = value.Idade,
+                Nome = value.Nome,
+                IdGenero = (int)value.Genero,
+                IdLocalizacao = saveLocalizacao.Id,
+            };
+            var response = _rebeldeService.SaveOrUpdate(request);
+
             if (response != null)
             {
-                return Ok("Rebelde cadastrado com sucesso!");
+                return Ok(response);
             }
             else
             {
@@ -68,7 +89,7 @@ namespace StarWarsResistence.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<Rebelde>> Get()
         {
-            var Rebelde = _RebeldeService.FindAllRebeldes();
+            var Rebelde = _rebeldeService.FindAllRebeldes();
             if (Rebelde != null)
             {
                 
@@ -85,12 +106,12 @@ namespace StarWarsResistence.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            Rebelde Rebelde = _RebeldeService.FindByIdRebelde(id);
+            Rebelde Rebelde = _rebeldeService.FindByIdRebelde(id);
             
             if(Rebelde != null)
             {
                 _context.Rebeldes.Remove(Rebelde);
-                var retorno = _RebeldeService.SaveOrUpdate(Rebelde);
+                var retorno = _rebeldeService.SaveOrUpdate(Rebelde);
                 return Ok(retorno);
             }
             else

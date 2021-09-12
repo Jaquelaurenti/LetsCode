@@ -42,7 +42,7 @@ namespace StarWarsResistence
                     });
 
    
-            services.AddDbContext<CentralErroContexto>();
+            services.AddDbContext<StarWarsContexto>();
             services.AddScoped<IRebeldeService, RebeldeService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

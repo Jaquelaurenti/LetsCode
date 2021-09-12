@@ -6,16 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using StarWarsResistence.Utils; 
 namespace StarWarsResistence.Models
 {
-    public class CentralErroContexto : DbContext
+    public class StarWarsContexto : DbContext
     {
         public DbSet<Rebelde> Rebeldes { get; set; }
+        public DbSet<Localizacao> Localizacao { get; set; }
 
-        public CentralErroContexto(DbContextOptions<CentralErroContexto> options) : base(options)
+        public StarWarsContexto(DbContextOptions<StarWarsContexto> options) : base(options)
         {
 
         }
 
-        public CentralErroContexto()
+        public StarWarsContexto()
         {
 
         }

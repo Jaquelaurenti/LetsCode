@@ -7,9 +7,9 @@ namespace StarWarsResistence.Services
 {
     public class RebeldeService : IRebeldeService
     {
-        private CentralErroContexto _context;
+        private StarWarsContexto _context;
 
-        public RebeldeService(CentralErroContexto contexto)
+        public RebeldeService(StarWarsContexto contexto)
         {
             _context = contexto;
         }

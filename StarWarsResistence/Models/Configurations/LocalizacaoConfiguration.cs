@@ -8,6 +8,7 @@ namespace StarWarsResistence.Models.Configurations
         public void Configure(EntityTypeBuilder<Localizacao> builder)
         {
             builder.HasKey(x => x.Id);
+
         }
     }
 }
