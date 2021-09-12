@@ -16,7 +16,7 @@ namespace StarWarsResistence.Controllers
     [ApiController]
     [ApiVersion("1.0")] 
     [Route("api/v{version:apiVersion}/[controller]")]
-    //[Authorize]
+
     public class RebeldeController : ControllerBase
     {
         private readonly IRebeldeService _rebeldeService;
@@ -62,6 +62,7 @@ namespace StarWarsResistence.Controllers
                 Idade = value.Idade,
                 Nome = value.Nome,
                 IdGenero = (int)value.Genero,
+                Localizacao = saveLocalizacao,
                 IdLocalizacao = saveLocalizacao.Id,
             };
             var response = _rebeldeService.SaveOrUpdate(request);
@@ -89,11 +90,11 @@ namespace StarWarsResistence.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<Rebelde>> Get()
         {
-            var Rebelde = _rebeldeService.FindAllRebeldes();
-            if (Rebelde != null)
+            var rebelde = _rebeldeService.FindAllRebeldes();
+            if (rebelde != null)
             {
                 
-                return Ok(Rebelde.Select(x => _mapper.Map<Rebelde>(x)).ToList());
+                return Ok(rebelde.Select(x => _mapper.Map<Rebelde>(x)).ToList());
             }
             else
                 return NotFound();
