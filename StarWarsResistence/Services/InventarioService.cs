@@ -1,5 +1,7 @@
-﻿using StarWarsResistence.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using StarWarsResistence.Interfaces;
 using StarWarsResistence.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +16,8 @@ namespace StarWarsResistence.Services
         {
             _context = contexto;
         }
+
+
 
         public bool Delete(Inventario inventario)
         {
@@ -33,6 +37,58 @@ namespace StarWarsResistence.Services
             return true;
         }
 
+        public async Task<Tuple<Rebelde, Rebelde>> NegociaInventario(int IdNegociante, int IdNegociador, int IdItemNegociante, int IdItemNegociador)
+        {
+            var negociante = await _context.Rebeldes.AsNoTracking()
+                 .Include(c => c.Localizacao)
+                 .Include(d => d.Inventario)
+                 .Include(c => c.Inventario.Itens)
+                 .Where(x => x.Id == IdNegociante).FirstOrDefaultAsync();
+
+            var negociador = await _context.Rebeldes.AsNoTracking()
+                .Include(c => c.Localizacao)
+                .Include(d => d.Inventario)
+                .Include(c => c.Inventario.Itens)
+                .Where(x => x.Id == IdNegociador).FirstOrDefaultAsync();
+
+            var itemFilteredNegociante = negociante.Inventario.Itens.Where(x => x.Id == IdItemNegociante).FirstOrDefault();
+            var itemFilteredNegociador = negociador.Inventario.Itens.Where(x => x.Id == IdItemNegociador).FirstOrDefault();
+
+
+            // Criando negociador temporario para armazenar o item atual
+            var negocianteTemp = itemFilteredNegociante;
+            var negociadorTemp = itemFilteredNegociador;
+
+            // atualizando o negociante com os itens do negociador 
+            itemFilteredNegociante.Pontuacao = negociadorTemp.Pontuacao;
+            itemFilteredNegociante.Tipo = negociadorTemp.Tipo;
+
+            // Salvando a troca do negociante com o negociador
+            await SaveOrUpdateItem(itemFilteredNegociante);
+
+            //Atualizando o negociador com os itens do negociante
+            itemFilteredNegociador.Pontuacao = negocianteTemp.Pontuacao;
+            itemFilteredNegociador.Tipo = negocianteTemp.Tipo;
+
+            // Salvando a troca do negociador com o negociante
+            await SaveOrUpdateItem(itemFilteredNegociante);
+
+            // Filtrando novaente para retornar atualizado
+            var negocianteAtual = await _context.Rebeldes.AsNoTracking()
+                .Include(c => c.Localizacao)
+                .Include(d => d.Inventario)
+                .Include(c => c.Inventario.Itens)
+                .Where(x => x.Id == IdNegociante).FirstOrDefaultAsync();
+
+            var negociadorAtual = await _context.Rebeldes.AsNoTracking()
+                .Include(c => c.Localizacao)
+                .Include(d => d.Inventario)
+                .Include(c => c.Inventario.Itens)
+                .Where(x => x.Id == IdNegociador).FirstOrDefaultAsync();
+
+            return new Tuple<Rebelde, Rebelde>(negociadorAtual, negocianteAtual);
+
+        }
         public async Task<Inventario> SaveOrUpdate(Inventario model)
         {
             var existe = _context.Inventario

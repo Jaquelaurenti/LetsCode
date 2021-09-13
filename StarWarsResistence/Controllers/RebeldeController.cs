@@ -39,23 +39,24 @@ namespace StarWarsResistence.Controllers
         /// <summary>
         /// Adiciona Rebeldes
         /// </summary>
+        ///<param name="rebelde">Estrutura do Rebelde a ser adicionado</param>
         /// <returns>Rebeldes cadastrados</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Rebelde>> Post([FromBody] RebeldeDTO value)
+        public async Task<ActionResult<Rebelde>> Post([FromBody] RebeldeDTO rebelde)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var saveLocalizacao = await InsereLocalizacaoRebeldde(value.Localizacao);
-            var saveInventario = await InsereInventario(value);
+            var saveLocalizacao = await InsereLocalizacaoRebeldde(rebelde.Localizacao);
+            var saveInventario = await InsereInventario(rebelde);
 
             var request = new Rebelde
             {
-                Idade = value.Idade,
-                Nome = value.Nome,
-                IdGenero = (Genero)value.Genero,
+                Idade = rebelde.Idade,
+                Nome = rebelde.Nome,
+                IdGenero = (Genero)rebelde.Genero,
                 Localizacao = saveLocalizacao,
                 IdLocalizacao = saveLocalizacao.Id,
                 Reports = 0,
@@ -84,6 +85,7 @@ namespace StarWarsResistence.Controllers
         /// <summary>
         /// Reporta o Rebelde como traidor
         /// </summary>
+        /// <param name="id">Id do rebelde a ser reportado</param>
         /// <returns>Rebelde reportado</returns>
         [HttpPut("traidor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -107,6 +109,8 @@ namespace StarWarsResistence.Controllers
         /// <summary>
         /// Atualiza Localizacao do Rebelde
         /// </summary>
+        /// <param name="localizacaoNova">Localização modificada</param>
+        /// <param name="id">Id do rebelde que terá a localização alterada</param>
         /// <returns>Localizacao</returns>
         [HttpPut("localizacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -139,24 +143,6 @@ namespace StarWarsResistence.Controllers
 
         }
 
-        /// <summary>
-        /// Retorna os Rebeldes
-        /// </summary>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Rebelde>> GetAsync()
-        {
-            var rebelde = await _rebeldeService.FindAllRebeldesAsync();
-            if (rebelde != null)
-            {
-
-                return Ok(rebelde.Select(x => _mapper.Map<Rebelde>(x)).ToList());
-            }
-            else
-                return NotFound();
-        }
-
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -182,6 +168,8 @@ namespace StarWarsResistence.Controllers
                 return NotFound(notFound);
             }
         }
+
+        #region private methods
 
         private ActionResult<Rebelde> InsereRebeldeTraidor(Rebelde rebelde)
         {
@@ -234,6 +222,7 @@ namespace StarWarsResistence.Controllers
 
             return saveInventario;
         }
+        #endregion
 
     }
 }

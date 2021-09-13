@@ -23,7 +23,7 @@ namespace StarWarsResistence.Services
 
 
             _context.Remove(localizacao);
-            var x = _context.SaveChanges();
+            _context.SaveChanges();
             return true;
         }
 
