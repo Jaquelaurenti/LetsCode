@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace StarWarsResistence.DTO
 {
-    public class InventarioDTO
+    public class ItensInventarioDTO
     {
-        public List<ItensInventarioDTO> Itens { get; set; }
+        public int Tipo { get; set; }
+        
     }
-  
+   
 }

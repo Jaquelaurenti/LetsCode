@@ -19,7 +19,7 @@ namespace StarWarsResistence.Models
 
         [Column("Pontuacao")]
         [Required]
-        public Pontuacao Pontuacao { get; set; }
+        public int Pontuacao { get; set; }
 
         [Column("IdInventario")]
         [Required]
@@ -40,12 +40,5 @@ namespace StarWarsResistence.Models
 
     }
 
-    public enum Pontuacao
-    {
-        Arma = 4,
-        Municao = 3,
-        Agua = 2,
-        Comimda = 1,
-
-    }
+   
 }

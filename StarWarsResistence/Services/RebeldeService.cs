@@ -21,7 +21,7 @@ namespace StarWarsResistence.Services
 
         public Rebelde FindByIdRebelde(int RebeldeId)
         {
-            return _context.Rebeldes.Find(RebeldeId);
+            return _context.Rebeldes.FirstOrDefault(x => x.Id == RebeldeId);
         }
         public Rebelde FindByNome(string name)
         {

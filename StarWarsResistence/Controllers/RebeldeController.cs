@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StarWarsResistence.Controllers
 {
@@ -21,14 +22,16 @@ namespace StarWarsResistence.Controllers
     {
         private readonly IRebeldeService _rebeldeService;
         private readonly ILocalizacaoService _localizacaoService;
+        private readonly IInventarioService _inventarioService;
         private readonly IMapper _mapper;
         private readonly StarWarsContexto _context;
 
-        public RebeldeController(IRebeldeService rebeldeService, IMapper mapper, ILocalizacaoService localizacaoService,
+        public RebeldeController(IRebeldeService rebeldeService, IMapper mapper, ILocalizacaoService localizacaoService, IInventarioService inventarioService,
             StarWarsContexto context)
         {
             _rebeldeService = rebeldeService;
             _localizacaoService = localizacaoService;
+            _inventarioService = inventarioService;
             _mapper = mapper;
             _context = context;
         }
@@ -40,7 +43,7 @@ namespace StarWarsResistence.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IEnumerable<Rebelde>> Post([FromBody] RebeldeDTO value)
+        public ActionResult<Rebelde> Post([FromBody] RebeldeDTO value)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -56,6 +59,25 @@ namespace StarWarsResistence.Controllers
 
             var saveLocalizacao = _localizacaoService.SaveOrUpdate(localizacao);
 
+            var listInventario = new List<ItemInventario>();
+
+            foreach(var item in value.Inventario.Itens)
+            {
+                var newItem = new ItemInventario();
+                newItem.Tipo = (TipoItem)item.Tipo;
+                if (TipoItem.Agua == newItem.Tipo) newItem.Pontuacao = 1;
+                if (TipoItem.Arma == newItem.Tipo) newItem.Pontuacao = 4;
+                if (TipoItem.Comimda == newItem.Tipo) newItem.Pontuacao = 2;
+                if (TipoItem.Municao == newItem.Tipo) newItem.Pontuacao = 3;
+
+                listInventario.Add(newItem);
+            }
+            var inventario = new Inventario
+            {
+                Itens = listInventario,
+            };
+
+            var saveInventario = _inventarioService.SaveOrUpdate(inventario);
 
             var request = new Rebelde
             {
@@ -66,12 +88,14 @@ namespace StarWarsResistence.Controllers
                 IdLocalizacao = saveLocalizacao.Id,
                 Reports = 0,
                 Traidor = false,
+                IdInventario = saveInventario.Id,
+                Inventario = saveInventario,
             };
             var response = _rebeldeService.SaveOrUpdate(request);
 
             if (response != null)
             {
-                return Ok(response);
+                return Ok("Rebelde Cadastrado com Sucesso");
             }
             else
             {
@@ -81,6 +105,24 @@ namespace StarWarsResistence.Controllers
                 notfound.Value = "Erro ao registrar Rebelde!";
                 return NotFound(notfound);
             }
+        }
+
+        [HttpPut("traidor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Rebelde> Put(int id)
+        {
+            Rebelde model =  _rebeldeService.FindByIdRebelde(id);
+
+            model.Reports = model.Reports + 1;
+
+            // Só inativa os itens do traidor quando o mesmo tiver três ou mais reports 
+            if (model.Reports >= 3)
+            {
+                InsereRebeldeTraidor(model);
+            }
+            return Ok(model);
+
         }
 
         /// <summary>
@@ -128,8 +170,15 @@ namespace StarWarsResistence.Controllers
             }
         }
 
+        private ActionResult<Rebelde> InsereRebeldeTraidor(Rebelde rebelde)
+        {
+            rebelde.Traidor = true;
 
+            _rebeldeService.SaveOrUpdate(rebelde);
 
+            return Ok(rebelde);
+
+        }
 
     }
 }

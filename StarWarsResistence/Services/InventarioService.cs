@@ -21,7 +21,14 @@ namespace StarWarsResistence.Services
                     .FirstOrDefault();
 
             if (existe == null)
+            {
                 _context.Inventario.Add(model);
+                foreach (var item in model.Itens)
+                {
+                    SaveOrUpdateItem(item);
+                }
+
+            }
             else
             {
                 existe.Id = model.Id;
@@ -31,7 +38,7 @@ namespace StarWarsResistence.Services
             return model;
         }
 
-        public ItemInventario SaveOrUpdate(ItemInventario itens)
+        public ItemInventario SaveOrUpdateItem(ItemInventario itens)
         {
             var existe = _context.ItemInventario
                     .Where(x => x.Id == itens.Id)

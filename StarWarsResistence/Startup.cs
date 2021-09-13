@@ -45,6 +45,7 @@ namespace StarWarsResistence
             services.AddDbContext<StarWarsContexto>();
             services.AddScoped<IRebeldeService, RebeldeService>();
             services.AddScoped<ILocalizacaoService, LocalizacaoService>();
+            services.AddScoped<IInventarioService, InventarioService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
