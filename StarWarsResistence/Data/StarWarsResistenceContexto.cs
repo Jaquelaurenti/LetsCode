@@ -10,6 +10,8 @@ namespace StarWarsResistence.Models
     {
         public DbSet<Rebelde> Rebeldes { get; set; }
         public DbSet<Localizacao> Localizacao { get; set; }
+        public DbSet<Inventario> Inventario { get; set; }
+        public DbSet<ItemInventario> ItemInventario { get; set; }
 
         public StarWarsContexto(DbContextOptions<StarWarsContexto> options) : base(options)
         {
@@ -32,6 +34,9 @@ namespace StarWarsResistence.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new RebeldeConfiguration());
+            modelBuilder.ApplyConfiguration(new LocalizacaoConfiguration());
+            modelBuilder.ApplyConfiguration(new InventarioConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemInventarioConfiguration());
         }
     }
 }
