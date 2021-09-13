@@ -43,41 +43,13 @@ namespace StarWarsResistence.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Rebelde> Post([FromBody] RebeldeDTO value)
+        public async Task<ActionResult<Rebelde>> Post([FromBody] RebeldeDTO value)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var localizacao = new Localizacao
-            {
-                Galaxia = value.Localizacao.Galaxia,
-                Nome = value.Localizacao.Nome,
-                Latitude = value.Localizacao.Latitude,
-                Longitude = value.Localizacao.Longitude,
-     
-            };
-
-            var saveLocalizacao = _localizacaoService.SaveOrUpdate(localizacao);
-
-            var listInventario = new List<ItemInventario>();
-
-            foreach(var item in value.Inventario.Itens)
-            {
-                var newItem = new ItemInventario();
-                newItem.Tipo = (TipoItem)item.Tipo;
-                if (TipoItem.Agua == newItem.Tipo) newItem.Pontuacao = 1;
-                if (TipoItem.Arma == newItem.Tipo) newItem.Pontuacao = 4;
-                if (TipoItem.Comimda == newItem.Tipo) newItem.Pontuacao = 2;
-                if (TipoItem.Municao == newItem.Tipo) newItem.Pontuacao = 3;
-
-                listInventario.Add(newItem);
-            }
-            var inventario = new Inventario
-            {
-                Itens = listInventario,
-            };
-
-            var saveInventario = _inventarioService.SaveOrUpdate(inventario);
+            var saveLocalizacao = await InsereLocalizacaoRebeldde(value.Localizacao);
+            var saveInventario = await InsereInventario(value);
 
             var request = new Rebelde
             {
@@ -91,7 +63,7 @@ namespace StarWarsResistence.Controllers
                 IdInventario = saveInventario.Id,
                 Inventario = saveInventario,
             };
-            var response = _rebeldeService.SaveOrUpdate(request);
+            var response = await _rebeldeService.SaveOrUpdate(request);
 
             if (response != null)
             {
@@ -99,6 +71,8 @@ namespace StarWarsResistence.Controllers
             }
             else
             {
+                _localizacaoService.Delete(saveLocalizacao);
+                _inventarioService.Delete(saveInventario);
                 object res = null;
                 NotFoundObjectResult notfound = new NotFoundObjectResult(res);
                 notfound.StatusCode = 400;
@@ -107,12 +81,17 @@ namespace StarWarsResistence.Controllers
             }
         }
 
+        /// <summary>
+        /// Reporta o Rebelde como traidor
+        /// </summary>
+        /// <returns>Rebelde reportado</returns>
         [HttpPut("traidor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Rebelde> Put(int id)
+        public ActionResult<Rebelde> ReportaTraidor(int id)
         {
             Rebelde model =  _rebeldeService.FindByIdRebelde(id);
+            if(model == null) return NotFound();
 
             model.Reports = model.Reports + 1;
 
@@ -126,18 +105,52 @@ namespace StarWarsResistence.Controllers
         }
 
         /// <summary>
+        /// Atualiza Localizacao do Rebelde
+        /// </summary>
+        /// <returns>Localizacao</returns>
+        [HttpPut("localizacao")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Rebelde>> AtualizaLocalizacao(int id, LocalizacaoDTO localizacaoNova)
+        {
+            var localizacao = _localizacaoService.FindByIdRebelde(id);
+
+            if(localizacao == null)
+            {
+                object res = null;
+                NotFoundObjectResult notFound = new NotFoundObjectResult(res);
+                notFound.StatusCode = 404;
+
+                notFound.Value = "O Rebelde " + id + " não foi encontrado!";
+                return NotFound(notFound);
+            }
+            else
+            {
+                localizacao.Galaxia = localizacaoNova.Galaxia;
+                localizacao.Latitude = localizacaoNova.Latitude;
+                localizacao.Longitude = localizacaoNova.Longitude;
+                localizacao.Nome = localizacaoNova.Nome;
+
+                var atualizado = await _localizacaoService.SaveOrUpdate(localizacao);
+
+                return Ok(atualizado);
+
+            }
+
+        }
+
+        /// <summary>
         /// Retorna os Rebeldes
         /// </summary>
-        /// <returns>Rebeldes cadastrados</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IEnumerable<Rebelde>> Get()
+        public async Task<ActionResult<Rebelde>> GetAsync()
         {
-            var rebelde = _rebeldeService.FindAllRebeldes();
+            var rebelde = await _rebeldeService.FindAllRebeldesAsync();
             if (rebelde != null)
             {
-                
+
                 return Ok(rebelde.Select(x => _mapper.Map<Rebelde>(x)).ToList());
             }
             else
@@ -178,6 +191,48 @@ namespace StarWarsResistence.Controllers
 
             return Ok(rebelde);
 
+        }
+
+        private async Task<Localizacao> InsereLocalizacaoRebeldde(LocalizacaoDTO value)
+        {
+            var localizacao = new Localizacao
+            {
+                Galaxia = value.Galaxia,
+                Nome = value.Nome,
+                Latitude = value.Latitude,
+                Longitude = value.Longitude,
+
+            };
+
+            var saveLocalizacao = await _localizacaoService.SaveOrUpdate(localizacao);
+
+            return saveLocalizacao;
+        }
+
+        private async Task<Inventario> InsereInventario(RebeldeDTO value)
+        {
+            var listInventario = new List<ItemInventario>();
+
+            foreach (var item in value.Inventario.Itens)
+            {
+                var newItem = new ItemInventario();
+                newItem.Tipo = (TipoItem)item.Tipo;
+                if (TipoItem.Agua == newItem.Tipo) newItem.Pontuacao = 1;
+                if (TipoItem.Arma == newItem.Tipo) newItem.Pontuacao = 4;
+                if (TipoItem.Comimda == newItem.Tipo) newItem.Pontuacao = 2;
+                if (TipoItem.Municao == newItem.Tipo) newItem.Pontuacao = 3;
+
+                listInventario.Add(newItem);
+            }
+            var inventario = new Inventario
+            {
+                Itens = listInventario,
+            };
+
+            var saveInventario = await _inventarioService.SaveOrUpdate(inventario);
+
+
+            return saveInventario;
         }
 
     }

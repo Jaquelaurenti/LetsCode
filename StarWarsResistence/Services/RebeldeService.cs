@@ -1,7 +1,9 @@
-﻿using StarWarsResistence.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using StarWarsResistence.Interfaces;
 using StarWarsResistence.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StarWarsResistence.Services
 {
@@ -14,9 +16,13 @@ namespace StarWarsResistence.Services
             _context = contexto;
         }
 
-        public IList<Rebelde> FindAllRebeldes()
+        public async Task<IList<Rebelde>> FindAllRebeldesAsync()
         {
-            return _context.Rebeldes.ToList();
+            return await _context.Rebeldes.AsNoTracking()
+                 .Include(c => c.Localizacao)
+                 .Include(d => d.Inventario)
+                 .Include(c => c.Inventario.Itens).ToListAsync();
+
         }
 
         public Rebelde FindByIdRebelde(int RebeldeId)
@@ -28,7 +34,7 @@ namespace StarWarsResistence.Services
             return _context.Rebeldes.FirstOrDefault(x => x.Nome == name);
         }
 
-        public Rebelde SaveOrUpdate(Rebelde Rebelde)
+        public async Task<Rebelde> SaveOrUpdate(Rebelde Rebelde)
         {
             var existe = _context.Rebeldes
                     .Where(x => x.Id == Rebelde.Id)
@@ -40,7 +46,7 @@ namespace StarWarsResistence.Services
             {
                 existe.Nome = Rebelde.Nome;
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Rebelde;
         }

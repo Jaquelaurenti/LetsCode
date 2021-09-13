@@ -1,12 +1,14 @@
 ﻿using StarWarsResistence.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StarWarsResistence.Interfaces
 {
     public interface IInventarioService
     {
-        Inventario SaveOrUpdate(Inventario inventario);
-        ItemInventario SaveOrUpdateItem(ItemInventario itens);
+        Task<Inventario> SaveOrUpdate(Inventario inventario);
+        Task<ItemInventario> SaveOrUpdateItem(ItemInventario itens);
+        bool Delete(Inventario inventario);
     
     }
 }

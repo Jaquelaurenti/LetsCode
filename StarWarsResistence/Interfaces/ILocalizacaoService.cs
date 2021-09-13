@@ -1,5 +1,6 @@
 ﻿using StarWarsResistence.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StarWarsResistence.Interfaces
 {
@@ -7,6 +8,7 @@ namespace StarWarsResistence.Interfaces
     {
         Localizacao FindByIdRebelde(int rebeldeId);
         Localizacao FindByNome(string nome);
-        Localizacao SaveOrUpdate(Localizacao localizacao);
+        Task<Localizacao> SaveOrUpdate(Localizacao localizacao);
+        bool Delete(Localizacao localizacao);
     }
 }

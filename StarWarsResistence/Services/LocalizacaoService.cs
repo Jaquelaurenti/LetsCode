@@ -2,6 +2,7 @@
 using StarWarsResistence.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StarWarsResistence.Services
 {
@@ -14,6 +15,17 @@ namespace StarWarsResistence.Services
             _context = contexto;
         }
 
+        public bool Delete(Localizacao localizacao)
+        {
+            var existe = _context.Localizacao
+                    .Where(x => x.Id == localizacao.Id)
+                    .FirstOrDefault();
+
+
+            _context.Remove(localizacao);
+            var x = _context.SaveChanges();
+            return true;
+        }
 
         public Localizacao FindByIdRebelde(int rebeldeId)
         {
@@ -24,7 +36,7 @@ namespace StarWarsResistence.Services
             return _context.Localizacao.FirstOrDefault(x => x.Nome == name);
         }
 
-        public Localizacao SaveOrUpdate(Localizacao model)
+        public async Task<Localizacao> SaveOrUpdate(Localizacao model)
         {
             var existe = _context.Localizacao
                     .Where(x => x.Id == model.Id)
@@ -36,7 +48,7 @@ namespace StarWarsResistence.Services
             {
                 existe.Nome = model.Nome;
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return model;
         }

@@ -104,7 +104,7 @@ namespace StarWarsResistence.Test
                 .Returns((int id) => GetFakeData<Rebelde>()
                 .FirstOrDefault(x => x.Id == id));
 
-            service.Setup(x => x.FindAllRebeldes())
+            service.Setup(x => x.FindAllRebeldesAsync())
                 .Returns(() => GetFakeData<Rebelde>().ToList());
 
             service.Setup(x => x.SaveOrUpdate(It.IsAny<Rebelde>()))

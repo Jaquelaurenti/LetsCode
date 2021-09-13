@@ -21,14 +21,14 @@ namespace StarWarsResistence.Test.Controllers
             var fakeRebeldeService = fakes.FakeRebeldeService().Object;
             var fakeLocalizacaoService = fakes.FakeLocalizacaoService().Object;
 
-            var expected = fakes.Mapper.Map<List<Rebelde>>(fakeRebeldeService.FindAllRebeldes());
+            var expected = fakes.Mapper.Map<List<Rebelde>>(fakeRebeldeService.FindAllRebeldesAsync());
             
             var contexto = new StarWarsContexto(fakes.FakeOptions);
 
             var controller = new RebeldeController(fakeRebeldeService,  
                 fakes.Mapper, fakeLocalizacaoService, contexto);
 
-            var result = controller.Get();
+            var result = controller.GetAsync();
 
             Assert.IsType<OkObjectResult>(result.Result);
             var actual = (result.Result as OkObjectResult).Value as List<Rebelde>;

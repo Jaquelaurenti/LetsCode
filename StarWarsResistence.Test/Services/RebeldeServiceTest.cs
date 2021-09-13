@@ -59,7 +59,7 @@ namespace StarWarsResistence.Test.Services
             var Rebelde = _fakeContext.GetFakeData<Rebelde>().ToList();
 
             var service = new RebeldeService(_contexto);
-            var atual = service.FindAllRebeldes();
+            var atual = service.FindAllRebeldesAsync();
 
             Assert.Equal(Rebelde, atual, new RebeldeIdComparer());
         }

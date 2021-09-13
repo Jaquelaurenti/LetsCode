@@ -2,6 +2,7 @@
 using StarWarsResistence.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StarWarsResistence.Services
 {
@@ -14,7 +15,25 @@ namespace StarWarsResistence.Services
             _context = contexto;
         }
 
-        public Inventario SaveOrUpdate(Inventario model)
+        public bool Delete(Inventario inventario)
+        {
+            var existe = _context.Inventario
+                    .Where(x => x.Id == inventario.Id)
+                    .FirstOrDefault();
+
+            foreach(var remove in existe.Itens)
+            {
+                _context.ItemInventario.Remove(remove);
+            }
+
+            _context.Inventario.Remove(existe);
+
+            _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<Inventario> SaveOrUpdate(Inventario model)
         {
             var existe = _context.Inventario
                     .Where(x => x.Id == model.Id)
@@ -25,7 +44,7 @@ namespace StarWarsResistence.Services
                 _context.Inventario.Add(model);
                 foreach (var item in model.Itens)
                 {
-                    SaveOrUpdateItem(item);
+                    await SaveOrUpdateItem(item);
                 }
 
             }
@@ -33,12 +52,12 @@ namespace StarWarsResistence.Services
             {
                 existe.Id = model.Id;
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return model;
         }
 
-        public ItemInventario SaveOrUpdateItem(ItemInventario itens)
+        public async Task<ItemInventario> SaveOrUpdateItem(ItemInventario itens)
         {
             var existe = _context.ItemInventario
                     .Where(x => x.Id == itens.Id)
@@ -50,9 +69,10 @@ namespace StarWarsResistence.Services
             {
                 existe.Id = itens.Id;
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return itens;
+
         }
     }
 }
