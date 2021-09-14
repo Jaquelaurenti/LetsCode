@@ -27,14 +27,14 @@ namespace StarWarsResistence.Test.Services
         }
 
         [Fact]
-        public void Should_Add_New_Rebelde_When_Save()
+        public async void Should_Add_New_Rebelde_When_Save()
         {
             var fakeRebelde = _fakeContext.GetFakeData<Rebelde>().First();
 
             var current = new Rebelde();
 
             var service = new RebeldeService(_contexto);
-            current = service.SaveOrUpdate(fakeRebelde);
+            current = await service.SaveOrUpdate(fakeRebelde);
 
             Assert.NotEqual(0, fakeRebelde.Id);
         }
@@ -61,7 +61,7 @@ namespace StarWarsResistence.Test.Services
             var service = new RebeldeService(_contexto);
             var atual = service.FindAllRebeldesAsync();
 
-            Assert.Equal(Rebelde, atual, new RebeldeIdComparer());
+            Assert.Equal(Rebelde, (IEnumerable<Rebelde>)atual, new RebeldeIdComparer());
         }
     }
 }

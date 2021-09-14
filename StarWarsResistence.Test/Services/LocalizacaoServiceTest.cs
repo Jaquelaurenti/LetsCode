@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using StarWarsResistence.Models;
 using StarWarsResistence.Services;
 using StarWarsResistence.Test.Comparers;
@@ -27,14 +28,14 @@ namespace StarWarsResistence.Test.Services
         }
 
         [Fact]
-        public void Should_Add_New_Localizacao_When_Save()
+        public async Task Should_Add_New_Localizacao_When_SaveAsync()
         {
             var fakeLocalizacao = _fakeContext.GetFakeData<Localizacao>().First();
 
             var current = new Localizacao();
 
             var service = new LocalizacaoService(_contexto);
-            current = service.SaveOrUpdate(fakeLocalizacao);
+            current = await service.SaveOrUpdate(fakeLocalizacao);
 
             Assert.NotEqual(0, fakeLocalizacao.Id);
         }

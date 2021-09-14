@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
+using StarWarsResistence.Extensions;
 
 namespace StarWarsResistence.Controllers
 {
@@ -18,7 +20,7 @@ namespace StarWarsResistence.Controllers
     [ApiVersion("1.0")] 
     [Route("api/v{version:apiVersion}/[controller]")]
 
-    public class RebeldeController : ControllerBase
+    public class RebeldeController : MainController
     {
         private readonly IRebeldeService _rebeldeService;
         private readonly ILocalizacaoService _localizacaoService;
@@ -42,8 +44,6 @@ namespace StarWarsResistence.Controllers
         ///<param name="rebelde">Estrutura do Rebelde a ser adicionado</param>
         /// <returns>Rebeldes cadastrados</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Rebelde>> Post([FromBody] RebeldeDTO rebelde)
         {
             if (!ModelState.IsValid)
@@ -68,7 +68,7 @@ namespace StarWarsResistence.Controllers
 
             if (response != null)
             {
-                return Ok("Rebelde Cadastrado com Sucesso");
+                return CustomResponse(true, response);
             }
             else
             {
@@ -90,7 +90,7 @@ namespace StarWarsResistence.Controllers
         [HttpPut("traidor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Rebelde> ReportaTraidor(int id)
+        public ActionResult<Rebelde> ReportaTraidor([FromQuery] int id)
         {
             Rebelde model =  _rebeldeService.FindByIdRebelde(id);
             if(model == null) return NotFound();
@@ -102,10 +102,27 @@ namespace StarWarsResistence.Controllers
             {
                 InsereRebeldeTraidor(model);
             }
-            return Ok(model);
+            return CustomResponse(true,model);
 
         }
 
+        /// <summary>
+        /// Negocia itens entre rebeldes
+        /// </summary>
+        /// <param name="idNegociador">Id do rebelde negociador</param>
+        /// <param name="idNegociante">Id do rebelde negociante</param>
+        /// <param name="idItemNegociante">Id do item do rebelde negociante</param>
+        /// <param name="idItemNegociador">Id do item do rebelde negociador</param>
+        /// <returns>Rebelde reportado</returns>
+        [HttpPut("negociante")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Tuple<Rebelde, Rebelde>>> NegociaItem([FromBody] int IdNegociante, int IdNegociador, int IdItemNegociante, int IdItemNegociador)
+        {
+            var response = await _inventarioService.NegociaInventario(IdNegociante, IdNegociador, IdItemNegociante, IdItemNegociador);
+            return CustomResponse(true,response);
+
+        }
         /// <summary>
         /// Atualiza Localizacao do Rebelde
         /// </summary>
@@ -115,7 +132,7 @@ namespace StarWarsResistence.Controllers
         [HttpPut("localizacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Rebelde>> AtualizaLocalizacao(int id, LocalizacaoDTO localizacaoNova)
+        public async Task<ActionResult<Rebelde>> AtualizaLocalizacao([FromBody] int id, LocalizacaoDTO localizacaoNova)
         {
             var localizacao = _localizacaoService.FindByIdRebelde(id);
 
@@ -137,7 +154,7 @@ namespace StarWarsResistence.Controllers
 
                 var atualizado = await _localizacaoService.SaveOrUpdate(localizacao);
 
-                return Ok(atualizado);
+                return CustomResponse(true,atualizado);
 
             }
 
@@ -146,7 +163,7 @@ namespace StarWarsResistence.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Rebelde> Delete(int id)
+        public ActionResult<Rebelde> Delete([FromQuery] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -156,7 +173,7 @@ namespace StarWarsResistence.Controllers
             {
                 _context.Rebeldes.Remove(Rebelde);
                 var retorno = _rebeldeService.SaveOrUpdate(Rebelde);
-                return Ok(retorno);
+                return CustomResponse(true,retorno);
             }
             else
             {
@@ -177,7 +194,7 @@ namespace StarWarsResistence.Controllers
 
             _rebeldeService.SaveOrUpdate(rebelde);
 
-            return Ok(rebelde);
+            return CustomResponse(true,rebelde);
 
         }
 
