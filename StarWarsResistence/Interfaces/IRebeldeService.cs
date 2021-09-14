@@ -10,6 +10,7 @@ namespace StarWarsResistence.Interfaces
         Rebelde FindByIdRebelde(int RebeldeId);
         Rebelde FindByNome(string name);
         Task<Rebelde> SaveOrUpdate(Rebelde Rebelde);
+        bool RebeldeTraidor(int RebeldeId);
         
     }
 }

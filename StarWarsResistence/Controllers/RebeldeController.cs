@@ -119,6 +119,9 @@ namespace StarWarsResistence.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Tuple<Rebelde, Rebelde>>> NegociaItem([FromBody] int IdNegociante, int IdNegociador, int IdItemNegociante, int IdItemNegociador)
         {
+            // verifica se o negociante é traidor
+            var isTraidor = _rebeldeService.RebeldeTraidor(IdItemNegociante);
+            if (isTraidor) return CustomResponse(false, null);
             var response = await _inventarioService.NegociaInventario(IdNegociante, IdNegociador, IdItemNegociante, IdItemNegociador);
             return CustomResponse(true,response);
 

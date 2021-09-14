@@ -34,6 +34,14 @@ namespace StarWarsResistence.Services
             return _context.Rebeldes.FirstOrDefault(x => x.Nome == name);
         }
 
+        public bool RebeldeTraidor(int RebeldeId)
+        {
+            var rebelde = _context.Rebeldes.FirstOrDefault(x => x.Id == RebeldeId);
+            if (rebelde.Traidor) return true;
+            else return false;
+
+        }
+
         public async Task<Rebelde> SaveOrUpdate(Rebelde Rebelde)
         {
             var existe = _context.Rebeldes
