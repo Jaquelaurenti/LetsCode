@@ -25,17 +25,12 @@ namespace StarWarsResistence.Controllers
         private readonly IRebeldeService _rebeldeService;
         private readonly ILocalizacaoService _localizacaoService;
         private readonly IInventarioService _inventarioService;
-        private readonly IMapper _mapper;
-        private readonly StarWarsContexto _context;
 
-        public RebeldeController(IRebeldeService rebeldeService, IMapper mapper, ILocalizacaoService localizacaoService, IInventarioService inventarioService,
-            StarWarsContexto context)
+        public RebeldeController(IRebeldeService rebeldeService, ILocalizacaoService localizacaoService, IInventarioService inventarioService)
         {
             _rebeldeService = rebeldeService;
             _localizacaoService = localizacaoService;
             _inventarioService = inventarioService;
-            _mapper = mapper;
-            _context = context;
         }
 
         /// <summary>
@@ -135,7 +130,7 @@ namespace StarWarsResistence.Controllers
         [HttpPut("localizacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Rebelde>> AtualizaLocalizacao([FromBody] int id, LocalizacaoDTO localizacaoNova)
+        public async Task<ActionResult<Rebelde>> AtualizaLocalizacao(int id, LocalizacaoDTO localizacaoNova)
         {
             var localizacao = _localizacaoService.FindByIdRebelde(id);
 
@@ -163,32 +158,7 @@ namespace StarWarsResistence.Controllers
 
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Rebelde> Delete([FromQuery] int id)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            Rebelde Rebelde = _rebeldeService.FindByIdRebelde(id);
-            
-            if(Rebelde != null)
-            {
-                _context.Rebeldes.Remove(Rebelde);
-                var retorno = _rebeldeService.SaveOrUpdate(Rebelde);
-                return CustomResponse(true,retorno);
-            }
-            else
-            {
-                object res = null;
-                NotFoundObjectResult notFound = new NotFoundObjectResult(res);
-                notFound.StatusCode = 404;
-
-                notFound.Value = "O Rebelde " + id +" não foi encontrado!";
-                return NotFound(notFound);
-            }
-        }
-
+        
         #region private methods
 
         private ActionResult<Rebelde> InsereRebeldeTraidor(Rebelde rebelde)

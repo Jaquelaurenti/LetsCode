@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StarWarsResistence.Interfaces;
 using StarWarsResistence.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +40,54 @@ namespace StarWarsResistence.Services
             var rebelde = _context.Rebeldes.FirstOrDefault(x => x.Id == RebeldeId);
             if (rebelde.Traidor) return true;
             else return false;
+
+        }
+
+        public IList<Tuple<TipoItem, int>> RetornaMediaRecurso()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int RetornaPercentualRebeldes()
+        {
+            var countRebeldes = _context.Rebeldes.ToList().Count();
+            var countRebeldesTraidores = _context.Rebeldes.ToList().Where(x => x.Traidor).Count();
+
+            int percentComplete = (int)Math.Round((double)(100 * countRebeldes) / countRebeldesTraidores);
+
+            return percentComplete;
+
+        }
+
+        public int RetornaPercentualTraidores()
+        {
+            var countRebeldes = _context.Rebeldes.ToList().Count();
+            var countRebeldesTraidores = _context.Rebeldes.ToList().Where(x => x.Traidor).Count();
+
+            int percentComplete = (int)Math.Round((double)(100 * countRebeldesTraidores) / countRebeldes);
+
+            return percentComplete;
+        }
+
+        public int RetornaPontosPerdidosPorTraicao()
+        {
+            int pontos = 0;
+            var traidores = _context.Rebeldes
+                .Include(x => x.Inventario)
+                .Include(y => y.Inventario.Itens)
+                .Where(x => x.Reports >= 3).ToList();
+
+
+            foreach (var rebeldes in traidores)
+            {
+                foreach (var itens in rebeldes.Inventario.Itens)
+                {
+                    pontos = pontos + itens.Pontuacao;
+                }
+
+            }
+
+            return pontos;
 
         }
 

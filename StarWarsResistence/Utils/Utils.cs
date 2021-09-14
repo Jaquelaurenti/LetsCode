@@ -9,17 +9,6 @@ namespace StarWarsResistence.Utils
 {
     public static class Utils
     {
-        public static string DecryptConnectionString(string connection)
-        {
-            AppSettings app = new AppSettings();
-
-            Byte[] b = Convert.FromBase64String(connection);
-
-            string decryptedConnection = System.Text.ASCIIEncoding.ASCII.GetString(b);
-            return decryptedConnection;
-
-        }
-
         public static string EncryptConnectionString(string connectionString)
         {
             Byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(connectionString);

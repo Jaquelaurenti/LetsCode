@@ -11,6 +11,9 @@ namespace StarWarsResistence.ConfigStartup
         public AutoMapperProfile()
         {
             CreateMap<Rebelde, RebeldeDTO>().ReverseMap();
+            CreateMap<Inventario, InventarioDTO>().ReverseMap();
+            CreateMap<Localizacao, LocalizacaoDTO>().ReverseMap();
+            CreateMap<ItemInventario, ItensInventarioDTO>().ReverseMap();
         }
     }
 }

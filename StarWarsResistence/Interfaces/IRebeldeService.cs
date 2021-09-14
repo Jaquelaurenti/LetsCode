@@ -1,4 +1,5 @@
 ﻿using StarWarsResistence.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,9 @@ namespace StarWarsResistence.Interfaces
         Rebelde FindByNome(string name);
         Task<Rebelde> SaveOrUpdate(Rebelde Rebelde);
         bool RebeldeTraidor(int RebeldeId);
-        
+        IList<Tuple<TipoItem, int>> RetornaMediaRecurso();
+        int RetornaPercentualRebeldes();
+        int RetornaPercentualTraidores();
+        int RetornaPontosPerdidosPorTraicao();
     }
 }

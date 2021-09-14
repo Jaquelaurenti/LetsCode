@@ -15,9 +15,7 @@ namespace StarWarsResistence.ConfigStartup
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services,
             IConfiguration configuration)
         {
-            var connection = Utils.Utils.DecryptConnectionString(configuration.GetConnectionString("DefaultConnection"));
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connection));
+            var connection = "";
 
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
