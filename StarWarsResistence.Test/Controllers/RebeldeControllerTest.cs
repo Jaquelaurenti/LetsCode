@@ -20,6 +20,7 @@ namespace StarWarsResistence.Test.Controllers
             
             var fakeRebeldeService = fakes.FakeRebeldeService().Object;
             var fakeLocalizacaoService = fakes.FakeLocalizacaoService().Object;
+            var fakeInventarioService = fakes.FakeInventarioService().Object;
 
             var expected = fakes.Mapper.Map<List<Rebelde>>(fakeRebeldeService.FindAllRebeldesAsync());
             

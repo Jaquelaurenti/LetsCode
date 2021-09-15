@@ -1,14 +1,26 @@
 ﻿[
-    {
-        "IdRebelde": 1,
-        "Nome": "error"
-    },
-    {
-        "IdRebelde": 2,
-        "Nome": "warn"
-    },
-    {
-        "IdRebelde": 3,
-        "Nome": "debug"
+  {
+    "localizacao": {
+      "nome": "jaque 1",
+      "galaxia": "china",
+      "latitude": "1234",
+      "longitude": "35353"
     }
+  },
+  {
+    "localizacao": {
+      "nome": "jaque 2",
+      "galaxia": "china",
+      "latitude": "1234",
+      "longitude": "35353"
+    }
+  },
+  {
+    "localizacao": {
+      "nome": "jaque 3",
+      "galaxia": "china",
+      "latitude": "1234",
+      "longitude": "35353"
+    }
+  }
 ]

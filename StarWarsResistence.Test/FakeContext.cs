@@ -38,12 +38,16 @@ namespace StarWarsResistence.Test
             DataFileNames.Add(typeof(RebeldeDTO), $"FakeData{Path.DirectorySeparatorChar}Rebelde.json");
             DataFileNames.Add(typeof(Localizacao), $"FakeData{Path.DirectorySeparatorChar}localizacao.json");
             DataFileNames.Add(typeof(LocalizacaoDTO), $"FakeData{Path.DirectorySeparatorChar}localizacao.json");
+            DataFileNames.Add(typeof(Inventario), $"FakeData{Path.DirectorySeparatorChar}inventario.json");
+            DataFileNames.Add(typeof(InventarioDTO), $"FakeData{Path.DirectorySeparatorChar}inventario.json");
+
 
             var configuration = new MapperConfiguration(cfg =>
             {
              
                 cfg.CreateMap<Rebelde, RebeldeDTO>().ReverseMap();
                 cfg.CreateMap<Localizacao, LocalizacaoDTO>().ReverseMap();
+                cfg.CreateMap<Inventario, InventarioDTO>().ReverseMap();
 
             });
 
@@ -76,11 +80,12 @@ namespace StarWarsResistence.Test
         {
             FillWith<Rebelde>();
             FillWith<Localizacao>();
+            FillWith<Inventario>();
         }
-        public List<T> GetFakeData<T>()
+        public IList<T> GetFakeData<T>()
         {
             string content = File.ReadAllText(FileName<T>());
-            return JsonConvert.DeserializeObject<List<T>>(content);
+            return JsonConvert.DeserializeObject<IList<T>>(content);
         }
 
         public void FillWith<T>() where T : class
@@ -118,6 +123,6 @@ namespace StarWarsResistence.Test
             return service;
         }
 
-        
+
     }
 }

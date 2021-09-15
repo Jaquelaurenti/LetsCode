@@ -1,14 +1,71 @@
 ﻿[
     {
-        "IdRebelde": 1,
-        "Nome": "error"
+      
+        "nome": "sheldon",
+        "idade": 32,
+        "genero": 1,
+        "localizacao": {
+          "nome": "jaque",
+          "galaxia": "china",
+          "latitude": "1234",
+          "longitude": "35353"
+        },
+        "inventario": {
+          "itens": [
+            {
+              "tipo": 1
+            },
+            {
+              "tipo": 2
+            }
+          ]
+        }
+      
     },
     {
-        "IdRebelde": 2,
-        "Nome": "warn"
+      
+        "nome": "sheldon 1",
+        "idade": 32,
+        "genero": 1,
+        "localizacao": {
+          "nome": "jaque",
+          "galaxia": "china",
+          "latitude": "1234",
+          "longitude": "35353"
+        },
+        "inventario": {
+          "itens": [
+            {
+              "tipo": 3
+            },
+            {
+              "tipo": 4
+            }
+          ]
+        }
+      
     },
     {
-        "IdRebelde": 3,
-        "Nome": "debug"
+      
+        "nome": "sheldon 3",
+        "idade": 32,
+        "genero": 1,
+        "localizacao": {
+          "nome": "jaque",
+          "galaxia": "china",
+          "latitude": "1234",
+          "longitude": "35353"
+        },
+        "inventario": {
+          "itens": [
+            {
+              "tipo": 1
+            },
+            {
+              "tipo": 2
+            }
+          ]
+        }
+      
     }
 ]
