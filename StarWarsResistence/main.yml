@@ -18,5 +18,5 @@ jobs:
       run: |
         cd ./ASPNetCoreLabs/HerokuContainer
         docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-        heroku container:push web -a central-erros-itau
-        heroku container:release web -a central-erros-itau
+        heroku container:push web -a lets-code-starwars
+        heroku container:release web -a lets-code-starwars
