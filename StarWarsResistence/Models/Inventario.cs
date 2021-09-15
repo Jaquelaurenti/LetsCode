@@ -6,14 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace StarWarsResistence.Models
 {
     [Table("Inventario")]
-    public class Inventario
+    public class Inventario : BaseModel
     {
-        [Column("Id")]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int Id { get; set; }
-
         public List<ItemInventario> Itens { get; set; }
         
     }

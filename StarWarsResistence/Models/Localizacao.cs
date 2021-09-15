@@ -5,13 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace StarWarsResistence.Models
 {
     [Table("Localizacao")]
-    public class Localizacao
+    public class Localizacao : BaseModel
     {
-        [Column("Id")]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int Id { get; set; }
 
         [Column("Nome")]
         [StringLength(50)]

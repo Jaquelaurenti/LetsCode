@@ -8,13 +8,8 @@ using System.Threading.Tasks;
 namespace StarWarsResistence.Models
 {
     [Table("Rebelde")]
-    public class Rebelde
+    public class Rebelde : BaseModel
     {
-        [Column("Id")]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int Id { get; set; }
 
         [Column("Nome")]
         [StringLength(50)]
